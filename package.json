@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/MinecraftPublisher/cables/issues"
   },
+  "bin": {
+    "cables": "bin/index.js"
+  },
   "homepage": "https://github.com/MinecraftPublisher/cables#readme"
 }
