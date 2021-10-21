@@ -77,7 +77,7 @@ const tools = {
                                 if (err) {
                                     if(err.toString().startsWith("Error: EEXIST: file already exists,")) {
                                         console.log(chalk.yellowBright.bold('Package already installed!'))
-                                        fs.unlinkSync('/usr/local/bin/' + Object.values(JSONfile['bin'])[0])
+                                        fs.unlinkSync('/usr/local/bin/' + Object.keys(JSONfile['bin'])[0])
                                         tools['patch'](name_or_url)
                                     } else {
                                         console.log(chalk.redBright.bold(err))
