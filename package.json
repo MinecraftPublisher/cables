@@ -1,7 +1,7 @@
 {
   "name": "cables",
   "version": "1.0.1",
-  "description": "An All-In-One package manager for your CLI needs.",
+  "description": "An All-In-One package manager for your CLI needs and deeds.",
   "main": "bin/index.js",
   "scripts": {
     "test": "node bin/index.js"
@@ -25,5 +25,12 @@
   "bin": {
     "cables": "bin/index.js"
   },
-  "homepage": "https://github.com/MinecraftPublisher/cables#readme"
+  "homepage": "https://github.com/MinecraftPublisher/cables#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "gost-cli": "^3.0.5",
+    "package-exists": "^1.1.2",
+    "readline-sync": "^1.4.10",
+    "shelljs": "^0.8.4"
+  }
 }
