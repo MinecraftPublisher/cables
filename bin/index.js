@@ -14,18 +14,31 @@ shell.mkdir('cables_files')
 
 let args = process.argv.slice(2)
 let path = process.cwd() + '/'
+let filepath = module.filename
 let isWin = process.platform === 'win32'
 const tools = {
     'help': () => {
         console.clear()
         console.log(
             chalk.green.bold('Cables Package Manager\n') +
-            chalk.yellowBright('help') + chalk.blueBright('                         Show this menu\n') +
+            chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
+            chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') + 
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
-            chalk.yellowBright('run <PACKAGE_NAME>') + chalk.blueBright('                   Run an installed package\n') +
             chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local') + chalk.greenBright(' to prevent frustration.') +
             '\n\n'
         )
+    },
+    'update': () => {
+        console.clear()
+        console.log(chalk.bold('Fetching data...'))
+        fetch('https://raw.githubusercontent.com/MinecraftPublisher/cables/main/bin/index.js').then((response) => {
+            console.log(chalk.bold('Converting data into plaintext...'))
+            response.text().then((data) => {
+                console.log(chalk.bold('Writing data to the file...'))
+                fs.writeFileSync(filepath, data)
+                console.log(chalk.greenBright.bold('Success! Cables has been updated to the latest version!'))
+            })
+        })
     },
     'patch': (name_or_url) => {
         fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
@@ -126,10 +139,9 @@ if (args.length === 2) {
 } else if (args.length === 1) {
     if (args[0] == 'help') {
         tools['help']()
+    } else if (args[0] == 'update') {
+        tools['update']()
     } else if (args[0] == 'install') {
-        console.clear()
-        console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
-    } else if (args[0] == 'run') {
         console.clear()
         console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
     } else {
