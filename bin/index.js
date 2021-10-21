@@ -6,11 +6,9 @@
  */
 
 const chalk = require('chalk')
-const rl = require('readline-sync')
 const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
-const { UV_FS_O_FILEMAP } = require('constants')
 if (!globalThis.fetch) { globalThis.fetch = fetch; }
 shell.mkdir('cables_files')
 
@@ -141,3 +139,6 @@ if (args.length === 2) {
 } else {
     tools['help']()
 }
+
+module.exports = "cables v" + JSON.parse(fs.readFileSync(path + 'package.json').toString())["version"] || '0'
+module.exports.install = tools['patch']
