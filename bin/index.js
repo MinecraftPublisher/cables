@@ -13,14 +13,14 @@ if (!globalThis.fetch) { globalThis.fetch = fetch; }
 shell.mkdir('cables_files')
 
 let args = process.argv.slice(2)
-let path = process.cwd() + '/'
 let filepath = module.filename
+let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
 let isWin = process.platform === 'win32'
 const tools = {
     'help': () => {
         console.clear()
         console.log(
-            chalk.green.bold('Cables Package Manager\n') +
+            chalk.green.bold('Cables Package Manager v' + (JSON.parse(fs.readFileSync(path + 'package.json').toString())['version'] || '0') + '\n') +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') + 
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
@@ -75,7 +75,7 @@ const tools = {
                             '/usr/local/bin/' + Object.keys(JSONfile['bin'])[0],
                             'file', (err) => {
                                 if (err) {
-                                    if(err.toString().startsWith("Error: EEXIST: file already exists,")) {
+                                    if(err.toString().startsWith('Error: EEXIST: file already exists,')) {
                                         console.log(chalk.yellowBright.bold('Package already installed!'))
                                         fs.unlinkSync('/usr/local/bin/' + Object.keys(JSONfile['bin'])[0])
                                         tools['patch'](name_or_url)
@@ -154,5 +154,5 @@ if (args.length === 2) {
     tools['help']()
 }
 
-module.exports = "cables"
+module.exports = 'cables v' + JSON.parse(fs.readFileSync(path + 'package.json').toString())['version'] || '0'
 module.exports.install = tools['patch']
