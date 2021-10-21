@@ -1,0 +1,26 @@
+{
+  "name": "cables",
+  "version": "1.0.0",
+  "description": "An All-In-One package manager for your CLI needs.",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "node bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinecraftPublisher/cables.git"
+  },
+  "keywords": [
+    "cli",
+    "package_manager",
+    "package",
+    "cables",
+    "manager"
+  ],
+  "author": "HoustonTheThird",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MinecraftPublisher/cables/issues"
+  },
+  "homepage": "https://github.com/MinecraftPublisher/cables#readme"
+}
