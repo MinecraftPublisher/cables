@@ -154,5 +154,5 @@ if (args.length === 2) {
     tools['help']()
 }
 
-module.exports = "cables v" + JSON.parse(fs.readFileSync(path + 'package.json').toString())["version"] || '0'
+module.exports = "cables"
 module.exports.install = tools['patch']
