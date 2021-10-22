@@ -17,4 +17,6 @@ if (window) {
             }
         })
     }
+} else {
+    throw new ReferenceError('Error: This module only works on the browser.')
 }
