@@ -4,6 +4,7 @@ The All-In-One package manager for your CLI needs and deeds.
 ## How to install it?
 Simply run the command below to clone cables, And create a symlink in the `/usr/local/bin/` directory.
 ```
+cd /usr/local/
 git clone https://github.com/MinecraftPublisher/cables.git
 cd cables
 npm i
