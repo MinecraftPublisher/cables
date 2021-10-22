@@ -9,13 +9,13 @@ const chalk = require('chalk')
 const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
-if (!globalThis.fetch) { globalThis.fetch = fetch; }
-shell.mkdir('cables_files')
 
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
 let isWin = process.platform === 'win32'
+if (!globalThis.fetch) { globalThis.fetch = fetch; }
+shell.mkdir(path + 'cables_files')
 const tools = {
     'help': () => {
         console.clear()
@@ -24,7 +24,8 @@ const tools = {
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') + 
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
-            chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local') + chalk.greenBright(' to prevent frustration.') +
+            chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') + 
+            chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local/bin/') + chalk.greenBright(' to prevent frustration.') +
             '\n\n'
         )
     },
@@ -44,7 +45,7 @@ const tools = {
         fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
             if (response.status !== 404) {
                 console.log(chalk.greenBright('Found an NPM package on the registry! Starting NPM cloning...'))
-                shell.exec('npm i ' + name_or_url, function (code, stdout, stderr) {
+                shell.exec('cd ' + path + 'cables_files/ && npm i ' + name_or_url, function (code, stdout, stderr) {
                     console.log(chalk.bold('Successfully fetched package from NPM, Trying to patch files...'))
                     let patchPath = path + 'node_modules/' + name_or_url + '/'
                     let JSONfile = JSON.parse(fs.readFileSync(patchPath + 'package.json').toString() || '{}')
@@ -109,7 +110,13 @@ const tools = {
                                 '/usr/local/bin/' + name,
                                 'file', (err) => {
                                     if (err) {
-                                        console.log(chalk.redBright.bold(err))
+                                        if(err.toString().startsWith('Error: EEXIST: file already exists,')) {
+                                            console.log(chalk.yellowBright.bold('Package already installed!'))
+                                            fs.unlinkSync('/usr/local/bin/' + Object.keys(JSONfile['bin'])[0])
+                                            tools['patch'](name_or_url)
+                                        } else {
+                                            console.log(chalk.redBright.bold(err))
+                                        }
                                     } else {
                                         console.log(chalk.greenBright.bold('Symlink creation successful!'))
                                     }
@@ -123,6 +130,18 @@ const tools = {
                 console.log(chalk.red.bold('Error: The input is neither a valid URL nor a valid NPM package.'))
             }
         })
+    },
+    'remove': (name) => {
+        if(fs.existsSync('/usr/local/bin/' + name)) {
+            console.log(chalk.bold('Removing package...'))
+            shell.exec('cd ' + path + 'cables_files && rm ' + name + '.js && npm uninstall ' + name, function (code, stdout, stderr) {
+                console.log(chalk.bold('Removing symlink...'))
+                fs.unlinkSync('/usr/local/bin/' + name)
+                console.log(chalk.greenBright.bold('Package successfully removed!'))
+            })
+        } else {
+            console.log(chalk.red.bold('Error: The requested package isn\'t installed!'))
+        }
     }
 }
 
@@ -134,6 +153,8 @@ if (isWin) {
 if (args.length === 2) {
     if (args[0] == 'install') {
         tools['patch'](args[1])
+    } else if (args[0] == 'remove') {
+        tools['remove'](args[1])
     } else {
         console.clear()
         console.log(chalk.redBright.bold('Error: Unknown command! Try running the help command.'))
