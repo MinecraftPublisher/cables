@@ -1,5 +1,5 @@
 if (window) {
-    global.require = (name) => {
+    globalThis.require = (name) => {
         fetch('https://www.npmjs.com/package/' + name).then(response => {
             if (response.status === 404) {
                 let dir_path = window.location.href.split('/').slice(0, window.location.href.split('/').length - 1).join('/') + '/'
