@@ -103,7 +103,7 @@ const tools = {
                                 file.unshift('#!/usr/bin/env node')
                                 console.log(chalk.bold('The node path was added successfully!'))
                             }
-                            fs.writeFileSync('cables_files/' + name + '.js', file.join('\n'))
+                            fs.writeFileSync(path + 'cables_files/' + name + '.js', file.join('\n'))
                             console.log(chalk.bold('Saved the file! Creating a symlink...'))
                             fs.symlink(
                                 'cables_files/' + name + '.js',
