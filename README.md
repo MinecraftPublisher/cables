@@ -4,12 +4,12 @@ The All-In-One package manager for your CLI needs and deeds.
 ## How to install it?
 Simply run the command below to clone cables, And create a symlink in the `/usr/local/bin/` directory.
 ```
-cd /usr/local/
-git clone https://github.com/MinecraftPublisher/cables.git
-cd cables
-npm i
-chmod +X ./bin/index.js
-node ./bin/index.js install cables
+sudo cd /usr/local/
+sudo git clone https://github.com/MinecraftPublisher/cables.git
+sudo cd cables
+sudo npm i
+sudo chmod +X ./bin/index.js
+sudo node ./bin/index.js install cables
 ```
 
 ## How to use it?
