@@ -22,9 +22,9 @@ const tools = {
         console.log(
             chalk.green.bold('Cables Package Manager v' + (JSON.parse(fs.readFileSync(path + 'package.json').toString())['version'] || '0') + '\n') +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
-            chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') + 
+            chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
-            chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') + 
+            chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') +
             chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local/bin/') + chalk.greenBright(' to prevent frustration.') +
             '\n\n'
         )
@@ -76,7 +76,7 @@ const tools = {
                             '/usr/local/bin/' + Object.keys(JSONfile['bin'])[0],
                             'file', (err) => {
                                 if (err) {
-                                    if(err.toString().startsWith('Error: EEXIST: file already exists,')) {
+                                    if (err.toString().startsWith('Error: EEXIST: file already exists,')) {
                                         console.log(chalk.yellowBright.bold('Package already installed!'))
                                         fs.unlinkSync('/usr/local/bin/' + Object.keys(JSONfile['bin'])[0])
                                         tools['patch'](name_or_url)
@@ -104,13 +104,14 @@ const tools = {
                                 console.log(chalk.bold('The node path was added successfully!'))
                             }
                             fs.writeFileSync(path + 'cables_files/' + name + '.js', file.join('\n'))
+                            shell.chmod('+x', path + 'cables_files/' + name + '.js')
                             console.log(chalk.bold('Saved the file! Creating a symlink...'))
                             fs.symlink(
-                                'cables_files/' + name + '.js',
+                                path + 'cables_files/' + name + '.js',
                                 '/usr/local/bin/' + name,
                                 'file', (err) => {
                                     if (err) {
-                                        if(err.toString().startsWith('Error: EEXIST: file already exists,')) {
+                                        if (err.toString().startsWith('Error: EEXIST: file already exists,')) {
                                             console.log(chalk.yellowBright.bold('Package already installed!'))
                                             fs.unlinkSync('/usr/local/bin/' + name)
                                             tools['patch'](name_or_url)
@@ -132,7 +133,7 @@ const tools = {
         })
     },
     'remove': (name) => {
-        if(fs.existsSync('/usr/local/bin/' + name)) {
+        if (fs.existsSync('/usr/local/bin/' + name)) {
             console.log(chalk.bold('Removing package...'))
             shell.exec('cd ' + path + 'cables_files && rm ' + name + '.js && npm uninstall ' + name, function (code, stdout, stderr) {
                 console.log(chalk.bold('Removing symlink...'))
