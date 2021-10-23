@@ -10,7 +10,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.0.8'
+let version = '3.2.8'
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
