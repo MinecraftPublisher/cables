@@ -10,7 +10,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.0.6'
+let version = '3.0.5'
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
@@ -39,7 +39,7 @@ const tools = {
             response.text().then((data) => {
                 console.log(chalk.bold('Writing data to the file...'))
                 fs.writeFileSync(filepath, data)
-                console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[12].substring(14, data.split('\n')[12].length - 1) + '!'))
+                console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[12].substring(15, data.split('\n')[12].length - 1) + '!'))
             })
         })
     },
