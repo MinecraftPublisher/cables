@@ -4,7 +4,8 @@
   "description": "An All-In-One package manager for your CLI needs and deeds.",
   "main": "bin/index.js",
   "scripts": {
-    "test": "node bin/index.js"
+    "test": "node bin/index.js",
+    "publish": "np --no-release-draft"
   },
   "repository": {
     "type": "git",
