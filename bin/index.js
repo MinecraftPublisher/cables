@@ -43,13 +43,13 @@ const tools = {
     'clean': () => {
         fs.readdirSync(path + 'cables_files').forEach((file) => {
             let name = file.split('/')[file.split('/').length - 1].split('.')[0]
-            fs.unlinkSync('/usr/local/bin/' + name)
+            fs.unlinkSync(path + name)
             fs.unlinkSync(file)
         })
         JSON.parse(fs.readFileSync(path + 'package.json').toString()).keys.forEach((package) => {
             if (!(package === 'chalk' || package === 'shelljs')) {
-                fs.unlinkSync('/usr/local/bin/' + package)
-                shell.exec('sudo npm uninstall ' + package)
+                fs.unlinkSync(path + package)
+                shell.exec('npm uninstall ' + package)
             }
         })
     },
@@ -90,7 +90,7 @@ const tools = {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
                 if (response.status !== 404) {
                     console.log(chalk.greenBright('Found an NPM package on the registry! Starting NPM cloning...'))
-                    shell.exec('cd ' + path + ' && sudo npm i ' + name_or_url, function (code, stdout, stderr) {
+                    shell.exec('cd ' + path + ' && npm i ' + name_or_url, function (code, stdout, stderr) {
                         console.log(chalk.bold('Successfully fetched package from NPM, Trying to patch files...'))
                         let patchPath = path + 'node_modules/' + name_or_url + '/'
                         let JSONfile = JSON.parse(fs.readFileSync(patchPath + 'package.json').toString() || '{}')
@@ -183,7 +183,7 @@ const tools = {
     'remove': (name) => {
         if (fs.existsSync('/usr/local/bin/' + name)) {
             console.log(chalk.bold('Removing package...'))
-            shell.exec('sudo cd ' + path + 'cables_files && sudo rm ' + name + '.js && sudo npm uninstall ' + name, function (code, stdout, stderr) {
+            shell.exec('cd ' + path + 'cables_files && rm ' + name + '.js && npm uninstall ' + name, function (code, stdout, stderr) {
                 console.log(chalk.bold('Removing symlink...'))
                 fs.unlinkSync('/usr/local/bin/' + name)
                 console.log(chalk.greenBright.bold('Package successfully removed!'))
