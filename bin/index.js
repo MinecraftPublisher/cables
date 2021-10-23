@@ -17,7 +17,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.3.0'
+let version = '3.3.1'
 let filepath = module.filename
 let path = '/usr/local/cables/'
 let args = process.argv.slice(2)
@@ -70,10 +70,10 @@ const tools = {
                                 fs.unlinkSync('/usr/local/bin/cables')
                                 console.clear()
                                 tools['update']()
-                                console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[12].substring(15, data.split('\n')[12].length - 1) + '!'))
+                                console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[19].substring(15, data.split('\n')[12].length - 1) + '!'))
                             }
                         } else {
-                            console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[12].substring(15, data.split('\n')[12].length - 1) + '!'))
+                            console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[19].substring(15, data.split('\n')[12].length - 1) + '!'))
                         }
                     })
             })
