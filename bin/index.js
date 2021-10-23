@@ -10,6 +10,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
+let version = "3.0.3"
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
@@ -20,7 +21,7 @@ const tools = {
     'help': () => {
         console.clear()
         console.log(
-            chalk.green.bold('Cables Package Manager v' + (JSON.parse(fs.readFileSync(path + 'package.json').toString())['version'] || '0') + '\n') +
+            chalk.green.bold('Cables Package Manager v' + version) +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
@@ -37,7 +38,9 @@ const tools = {
             response.text().then((data) => {
                 console.log(chalk.bold('Writing data to the file...'))
                 fs.writeFileSync(filepath, data)
-                console.log(chalk.greenBright.bold('Success! Cables has been updated to the latest version!'))
+                console.log(chalk.bold('Running the new version...'))
+                const newVersion = require(filepath)
+                newVersion.updated()
             })
         })
     },
@@ -176,5 +179,8 @@ if (args.length === 2) {
     tools['help']()
 }
 
-module.exports = 'cables v' + JSON.parse(fs.readFileSync(path + 'package.json').toString())['version'] || '0'
+module.exports.updated = () => {
+    console.log(chalk.greenBright.bold('Cables has been updated to version ' + version + '!'))
+}
+module.exports = 'cables v' + version
 module.exports.install = tools['patch']
