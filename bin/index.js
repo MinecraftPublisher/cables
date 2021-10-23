@@ -5,7 +5,7 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
-let version = '3.5.0'
+let version = '4.0.0'
 let isWin = process.platform === 'win32'
 if (isWin) {
     console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
@@ -18,6 +18,7 @@ function isCurrentUserRoot() {
 const fetch = require('node-fetch')
 const chalk = require('chalk')
 const shell = require('shelljs')
+shell.config.silent = true
 const fs = require('fs')
 let filepath = module.filename
 let path = '/usr/local/cables/'
