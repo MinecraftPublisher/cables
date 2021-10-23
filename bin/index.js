@@ -39,9 +39,7 @@ const tools = {
             response.text().then((data) => {
                 console.log(chalk.bold('Writing data to the file...'))
                 fs.writeFileSync(filepath, data)
-                console.log(chalk.bold('Running the new version...'))
-                const newVersion = require(filepath)
-                newVersion.updated()
+                console.log(chalk.greenBright.bold('Cables has been updated to version ' + data.split('\n')[12].substring(14, data.split('\n')[12].length - 1) + '!'))
             })
         })
     },
@@ -187,6 +185,5 @@ if (args.length === 2) {
 module.exports = {
     'version': 'cables v' + version,
     'install': tools['patch'],
-    'update': tools['update'],
-    'updated': () => { console.log(chalk.greenBright.bold('Cables has been updated to version ' + version + '!')) }
+    'update': tools['update']
 }
