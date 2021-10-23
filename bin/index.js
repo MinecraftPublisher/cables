@@ -22,6 +22,7 @@ let filepath = module.filename
 let path = '/usr/local/cables/'
 let args = process.argv.slice(2)
 if (!globalThis.fetch) { globalThis.fetch = fetch; }
+shell.mkdir(path)
 shell.mkdir(path + 'cables_files')
 const tools = {
     'help': () => {
