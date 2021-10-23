@@ -12,8 +12,8 @@ if (isWin) {
     process.exit()
 }
 
+import fetch from "node-fetch";
 const chalk = require('chalk')
-const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
