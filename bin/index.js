@@ -10,7 +10,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = "3.0.3"
+let version = '3.0.4'
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
@@ -179,8 +179,9 @@ if (args.length === 2) {
     tools['help']()
 }
 
-module.exports.updated = () => {
-    console.log(chalk.greenBright.bold('Cables has been updated to version ' + version + '!'))
+module.exports = {
+    'version': 'cables v' + version, 
+    'install': tools['patch'],
+    'update': tools['update'],
+    'updated': () => { console.log(chalk.greenBright.bold('Cables has been updated to version ' + version + '!')) }
 }
-module.exports = 'cables v' + version
-module.exports.install = tools['patch']
