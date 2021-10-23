@@ -5,7 +5,7 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
-let version = '4.0.1'
+let version = '4.0.2'
 let isWin = process.platform === 'win32'
 let args = process.argv.slice(2)
 if (isWin && args.length !== 0) {
