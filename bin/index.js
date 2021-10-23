@@ -45,7 +45,7 @@ const tools = {
     },
     'patch': (name_or_url) => {
         if (name_or_url == 'cables')
-            tools['update']
+            tools['update']()
         else {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
                 if (response.status !== 404) {
