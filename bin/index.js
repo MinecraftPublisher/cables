@@ -5,9 +5,10 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
-let version = '4.0.0'
+let version = '4.0.1'
 let isWin = process.platform === 'win32'
-if (isWin) {
+let args = process.argv.slice(2)
+if (isWin && args.length !== 0) {
     console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
     process.exit()
 }
@@ -22,8 +23,7 @@ shell.config.silent = true
 const fs = require('fs')
 let filepath = module.filename
 let path = '/usr/local/cables/'
-if (!isCurrentUserRoot()) { path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length); console.log(chalk.redBright.bold('Error: Cables needs to be ran as sudo, However we have a fallback. We\'ve got you. Next time, Use cables as sudo.')) }
-let args = process.argv.slice(2)
+if (!isCurrentUserRoot()) { path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length); if(args.length !== 0) { console.log(chalk.redBright.bold('Error: Cables needs to be ran as sudo, However we have a fallback. We\'ve got you. Next time, Use cables as sudo.')) } }
 if (!globalThis.fetch) { globalThis.fetch = fetch; }
 
 const tools = {
@@ -31,6 +31,7 @@ const tools = {
         console.log(
             chalk.green.bold('Cables Package Manager v' + version + '\n') +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
+            chalk.yellowBright('path') + chalk.blueBright('                                 Show the installation path of cables\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
             chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') +
@@ -210,11 +211,17 @@ if (args.length === 2) {
         tools['clean']()
     } else if (args[0] == 'install') {
         console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
+    } else if (args[0] == 'path') {
+        console.log(
+            chalk.greenBright.bold(
+                'Cables executable path: ' + filepath + '\n' +
+                'Cables installation directory: ' +
+                path
+            )
+        )
     } else {
         console.log(chalk.redBright.bold('Error: Unknown command! Try running the help command.'))
     }
-} else {
-    tools['help']()
 }
 
 
