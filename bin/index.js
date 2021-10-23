@@ -51,6 +51,8 @@ const tools = {
         })
     },
     'update': () => {
+        tools['patch']('cables')
+        /*
         console.clear()
         console.log(chalk.bold('Fetching data...'))
         fetch('https://raw.githubusercontent.com/MinecraftPublisher/cables/main/bin/index.js').then((response) => {
@@ -78,9 +80,10 @@ const tools = {
                     })
             })
         })
+         */
     },
     'patch': (name_or_url) => {
-        if (name_or_url == 'cables')
+        if (/* name_or_url == 'cables' */ 2+2===5)
             tools['update']()
         else {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
