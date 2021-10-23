@@ -28,8 +28,6 @@
   "homepage": "https://github.com/MinecraftPublisher/cables#readme",
   "dependencies": {
     "chalk": "^4.1.2",
-    "package-exists": "^1.1.2",
-    "readline-sync": "^1.4.10",
     "shelljs": "^0.8.4"
   }
 }

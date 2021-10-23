@@ -2,7 +2,7 @@
 The All-In-One package manager for your CLI needs and deeds.
 
 ## How to install it?
-Simply run the command below to clone cables, And create a symlink in the `/usr/local/bin/` directory. **Make sure you run this script in a non-temporary folder as all the files of cables will be stored there.**
+Simply run the command below to clone cables, And create a symlink in the `/usr/local/bin/` directory. All the downloaded files and your cables installation will be stored in the `/usr/local/cables` folder that you can remove or modify at any time.
 ```bash
 git clone https://github.com/MinecraftPublisher/cables.git
 cd cables

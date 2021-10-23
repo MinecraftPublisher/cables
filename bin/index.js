@@ -5,16 +5,22 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
+let isWin = process.platform === 'win32'
+if (isWin) {
+    console.clear()
+    console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
+    process.exit()
+}
+
 const chalk = require('chalk')
 const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.2.8'
-let args = process.argv.slice(2)
+let version = '3.3.0'
 let filepath = module.filename
-let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
-let isWin = process.platform === 'win32'
+let path = '/usr/local/cables/'
+let args = process.argv.slice(2)
 if (!globalThis.fetch) { globalThis.fetch = fetch; }
 shell.mkdir(path + 'cables_files')
 const tools = {
@@ -26,9 +32,23 @@ const tools = {
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
             chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') +
+            chalk.yellowBright('clean') + chalk.blueBright.bold('                                 This command removes ALL of your existing packages and unlinks them, Be careful.\n') + 
             chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local/bin/') + chalk.greenBright(' to prevent frustration.\n') +
             '\n\n'
         )
+    },
+    'clean': () => {
+        fs.readdirSync(path + 'cables_files').forEach((file) => {
+            let name = file.split('/')[file.split('/').length - 1].split('.')[0]
+            fs.unlinkSync('/usr/local/bin/' + name)
+            fs.unlinkSync(file)
+        })
+        JSON.parse(fs.readFileSync(path + 'package.json').toString()).keys.forEach((package) => {
+            if(!(package === 'chalk' || package === 'shelljs')) {
+                fs.unlinkSync('/usr/local/bin/' + package)
+                shell.exec('npm uninstall ' + package)
+            }
+        })
     },
     'update': () => {
         console.clear()
@@ -168,11 +188,6 @@ const tools = {
     }
 }
 
-if (isWin) {
-    console.clear()
-    console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
-    process.exit()
-}
 if (args.length === 2) {
     if (args[0] == 'install') {
         tools['patch'](args[1])
@@ -187,6 +202,8 @@ if (args.length === 2) {
         tools['help']()
     } else if (args[0] == 'update') {
         tools['update']()
+    } else if (args[0] == 'clean') {
+        tools['clean']()
     } else if (args[0] == 'install') {
         console.clear()
         console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
