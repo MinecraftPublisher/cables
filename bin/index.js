@@ -5,7 +5,7 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
-let version = '4.1.0'
+let version = '4.2.0'
 let isWin = process.platform === 'win32'
 let args = process.argv.slice(2)
 let path = '/usr/local/cables/'
