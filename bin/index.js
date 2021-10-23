@@ -8,34 +8,39 @@
 let version = '4.1.0'
 let isWin = process.platform === 'win32'
 let args = process.argv.slice(2)
-if (isWin && args.length !== 0) {
-    console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
-    process.exit()
-}
-function isCurrentUserRoot() {
-    return process.getuid() == 0;
-}
-
+let path = '/usr/local/cables/'
 const fetch = require('node-fetch')
 const chalk = require('chalk')
 const shell = require('shelljs')
-shell.config.silent = true
 const fs = require('fs')
+function isCurrentUserRoot() {
+    return process.getuid() === 0;
+}
 let filepath = module.filename
-let path = '/usr/local/cables/'
-if (!isCurrentUserRoot()) { path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length); if(args.length !== 0) { console.log(chalk.redBright.bold('Error: Cables needs to be ran as sudo, However we have a fallback. We\'ve got you. Next time, Use cables as sudo.')) } }
+if (!isCurrentUserRoot()) { path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length); }
+let silent = fs.existsSync(path + 'silent.conf') ? fs.readFileSync(path + 'silent.conf').toString() : 'true'
 if (!globalThis.fetch) { globalThis.fetch = fetch; }
+shell.config.silent = silent === 'true'
+if (isWin && args.length !== 0 && silent === 'false') {
+    console.log(chalk.redBright.bold('Error: We still haven\'t figured out a way to create symlinks on Windows, Sorry about that.'))
+    process.exit()
+}
+
+if (!isCurrentUserRoot()) { if(args.length !== 0 && silent === 'false') { console.log(chalk.redBright.bold('Error: Cables needs to be ran as sudo, However we have a fallback. We\'ve got you. Next time, Use cables as sudo.')) } }
+
 
 const tools = {
     'help': () => {
         console.log(
             chalk.green.bold('Cables Package Manager v' + version + '\n') +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
+            chalk.yellowBright('version') + chalk.blueBright('                              Get the current cables version\n') +
             chalk.yellowBright('path') + chalk.blueBright('                                 Show the installation path of cables\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
             chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') +
-            chalk.yellowBright('clean') + chalk.blueBright.bold('                                 This command removes ALL of your existing packages and unlinks them, Be careful.\n') +
+            chalk.yellowBright('silent') + chalk.blueBright('                               Toggle between silent mode, Determines wether messages should be logged or no\n') +
+            chalk.yellowBright('clean') + chalk.blueBright.bold('                                This command removes ALL of your existing packages and unlinks them, Be careful.\n') +
             chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local/bin/') + chalk.greenBright(' to prevent frustration.\n') +
             '\n\n'
         )
@@ -84,7 +89,7 @@ const tools = {
          */
     },
     'patch': (name_or_url) => {
-        if (/* name_or_url == 'cables' */ 2 + 2 === 5)
+        if (/* name_or_url === 'cables' */ 2 + 2 === 5)
             tools['update']()
         else {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
@@ -94,7 +99,7 @@ const tools = {
                         console.log(chalk.bold('Successfully fetched package from NPM, Trying to patch files...'))
                         let patchPath = path + 'node_modules/' + name_or_url + '/'
                         let JSONfile = JSON.parse(fs.readFileSync(patchPath + 'package.json').toString() || '{}')
-                        if (JSONfile == {}) {
+                        if (JSONfile === {}) {
                             console.log(chalk.redBright.bold('Error: Invalid package.json file.'))
                         } else {
                             console.log(chalk.bold('Found the package.json file! Patching...'))
@@ -108,7 +113,7 @@ const tools = {
                             fs.writeFileSync(patchPath + 'package.json', JSON.stringify(JSONfile))
                             console.log(chalk.bold('Patch succeeded, Attempting to fix the node path...'))
                             let file = fs.readFileSync(patchPath + Object.values(JSONfile['bin'])[0]).toString().split('\n')
-                            if (file[0] == '#!/usr/bin/env node') {
+                            if (file[0] === '#!/usr/bin/env node') {
                                 console.log(chalk.bold('The node path already exists!'))
                             } else {
                                 file.unshift('#!/usr/bin/env node')
@@ -143,7 +148,7 @@ const tools = {
                                 console.log(chalk.bold('Trying to patch the file...'))
                                 let file = data.split('\n')
                                 let name = name_or_url.split('/')[name_or_url.split('/').length - 1].split('.')[0]
-                                if (file[0] == '#!/usr/bin/env node') {
+                                if (file[0] === '#!/usr/bin/env node') {
                                     console.log(chalk.bold('The node path already exists!'))
                                 } else {
                                     file.unshift('#!/usr/bin/env node')
@@ -195,25 +200,33 @@ const tools = {
 }
 
 if (args.length === 2) {
-    if (args[0] == 'install') {
+    if (args[0] === 'install') {
         tools['patch'](args[1])
-    } else if (args[0] == 'remove') {
+    } else if (args[0] === 'remove') {
         tools['remove'](args[1])
     } else {
         console.log(chalk.redBright.bold('Error: Unknown command! Try running the help command.'))
     }
 } else if (args.length === 1) {
-    if (args[0] == 'help') {
+    if (args[0] === 'help') {
         tools['help']()
-    } else if (args[0] == 'update') {
+    } else if (args[0] === 'update') {
         tools['update']()
-    } else if (args[0] == 'clean') {
+    } else if (args[0] === 'clean') {
         tools['clean']()
-    } else if (args[0] == 'install') {
+    } else if (args[0] === 'install') {
         console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
-    } else if (args[0] == 'version') {
+    } else if (args[0] === 'version') {
         console.log(chalk.yellowBright.bold('Cables package manager v' + version))
-    } else if (args[0] == 'path') {
+    } else if (args[0] === 'silent') {
+        if(silent === 'true') {
+            console.log(chalk.greenBright.bold('Silent mode turned off'))
+            fs.writeFileSync(path + 'silent.conf', 'false')
+        } else {
+            console.log(chalk.greenBright.bold('Silent mode turned on'))
+            fs.writeFileSync(path + 'silent.conf', 'true')
+        }
+    } else if (args[0] === 'path') {
         console.log(
             chalk.greenBright.bold(
                 'Cables executable path: ' + filepath + '\n' +
@@ -224,6 +237,8 @@ if (args.length === 2) {
     } else {
         console.log(chalk.redBright.bold('Error: Unknown command! Try running the help command.'))
     }
+} else if (silent === 'false') {
+    tools['help']()
 }
 
 
