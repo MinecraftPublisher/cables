@@ -5,7 +5,7 @@
  * The All-In-One package manager for your CLI needs and deeds.
  */
 
-let version = '4.0.2'
+let version = '4.1.0'
 let isWin = process.platform === 'win32'
 let args = process.argv.slice(2)
 if (isWin && args.length !== 0) {
@@ -90,7 +90,7 @@ const tools = {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
                 if (response.status !== 404) {
                     console.log(chalk.greenBright('Found an NPM package on the registry! Starting NPM cloning...'))
-                    shell.exec('cd ' + path + ' && npm i ' + name_or_url, function (code, stdout, stderr) {
+                    shell.exec('npm i ' + name_or_url + ' --prefix ' + path, function (code, stdout, stderr) {
                         console.log(chalk.bold('Successfully fetched package from NPM, Trying to patch files...'))
                         let patchPath = path + 'node_modules/' + name_or_url + '/'
                         let JSONfile = JSON.parse(fs.readFileSync(patchPath + 'package.json').toString() || '{}')
@@ -211,6 +211,8 @@ if (args.length === 2) {
         tools['clean']()
     } else if (args[0] == 'install') {
         console.log(chalk.redBright.bold('Error: Not enough arguments, Try running the help command.'))
+    } else if (args[0] == 'version') {
+        console.log(chalk.yellowBright.bold('Cables package manager v' + version))
     } else if (args[0] == 'path') {
         console.log(
             chalk.greenBright.bold(
