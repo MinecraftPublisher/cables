@@ -21,7 +21,7 @@ const tools = {
     'help': () => {
         console.clear()
         console.log(
-            chalk.green.bold('Cables Package Manager v' + version) +
+            chalk.green.bold('Cables Package Manager v' + version + '\n') +
             chalk.yellowBright('help') + chalk.blueBright('                                 Show this menu\n') +
             chalk.yellowBright('update') + chalk.blueBright('                               Updates cables to the latest version\n') +
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
