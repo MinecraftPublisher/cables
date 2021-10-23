@@ -1,6 +1,6 @@
 {
   "name": "cables",
-  "version": "3.2.7",
+  "version": "3.2.8",
   "description": "An All-In-One package manager for your CLI needs and deeds.",
   "main": "bin/index.js",
   "scripts": {
