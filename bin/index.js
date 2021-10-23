@@ -10,7 +10,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.2.7'
+let version = '3.0.8'
 let args = process.argv.slice(2)
 let filepath = module.filename
 let path = '/' + filepath.substring(1, filepath.length - 'bin/index.js'.length)
@@ -27,7 +27,6 @@ const tools = {
             chalk.yellowBright('install <PACKAGE_NAME_OR_URL>') + chalk.blueBright('        Install a package\n') +
             chalk.yellowBright('remove <PACKAGE_NAME_OR_URL>') + chalk.blueBright('         Uninstall a package\n') +
             chalk.greenBright('Cables also creates symlinks of all installed packages in ') + chalk.yellowBright.bgBlueBright('/usr/local/bin/') + chalk.greenBright(' to prevent frustration.\n') +
-            chalk.bgWhite.black.bold('It is recommended to update cables using the update command, Rather than self-installing it using ' + chalk.white.bgRed('cables install cables') + '.') + 
             '\n\n'
         )
     },
