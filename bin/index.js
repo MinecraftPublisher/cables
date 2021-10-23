@@ -88,7 +88,7 @@ const tools = {
             fetch('https://npmjs.com/package/' + name_or_url).then((response) => {
                 if (response.status !== 404) {
                     console.log(chalk.greenBright('Found an NPM package on the registry! Starting NPM cloning...'))
-                    shell.exec('cd /usr/local/cables && sudo npm i ' + name_or_url, function (code, stdout, stderr) {
+                    shell.exec('cd ' + path + ' && sudo npm i ' + name_or_url, function (code, stdout, stderr) {
                         console.log(chalk.bold('Successfully fetched package from NPM, Trying to patch files...'))
                         let patchPath = path + 'node_modules/' + name_or_url + '/'
                         let JSONfile = JSON.parse(fs.readFileSync(patchPath + 'package.json').toString() || '{}')
@@ -127,7 +127,8 @@ const tools = {
                                             console.log(chalk.redBright.bold(err))
                                         }
                                     } else {
-                                        console.log(chalk.greenBright.bold('Symlink creation successful!'))
+                                        console.log(chalk.bold('Symlink creation successful!'))
+                                        console.log(chalk.greenBright.bold('Successfully installed ' + name_or_url))
                                     }
                                 })
                         }
@@ -163,6 +164,7 @@ const tools = {
                                             }
                                         } else {
                                             console.log(chalk.greenBright.bold('Symlink creation successful!'))
+                                            console.log(chalk.greenBright.bold('Successfully installed ' + name))
                                         }
                                     })
                             })
