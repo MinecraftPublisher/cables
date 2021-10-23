@@ -17,7 +17,7 @@ const fetch = require('node-fetch')
 const shell = require('shelljs')
 const fs = require('fs')
 
-let version = '3.3.0'
+let version = '3.3.2'
 let filepath = module.filename
 let path = '/usr/local/cables/'
 let args = process.argv.slice(2)
